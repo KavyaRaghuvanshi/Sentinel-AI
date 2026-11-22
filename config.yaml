@@ -1,0 +1,69 @@
+# ============================================================
+# Sentinel AI - Configuration
+# ============================================================
+# Copy this file to config.local.yaml for personal overrides.
+# config.local.yaml is git-ignored and takes priority.
+# ============================================================
+
+sentinel:
+  # ---- Disk & Temp File Cleanup ----
+  cleanup:
+    enabled: true
+    min_age_hours: 24               # Only delete temp files older than this
+    max_delete_mb: 5000             # Safety cap: never delete more than this in one run
+    protected_extensions:           # Never delete files with these extensions
+      - ".dll"
+      - ".sys"
+      - ".exe"
+      - ".msi"
+      - ".log"                      # Keep logs for forensics
+    additional_temp_dirs: []        # Extra directories to scan (use with caution)
+
+  # ---- Security Audit ----
+  security:
+    enabled: true
+    suspicious_exe_paths:           # Flag processes running from these locations
+      - "\\temp\\"
+      - "\\appdata\\local\\temp\\"
+      - "\\downloads\\"
+    trusted_processes:              # Never flag these process names
+      - "python.exe"
+      - "pythonw.exe"
+      - "code.exe"
+      - "chrome.exe"
+      - "msedge.exe"
+      - "explorer.exe"
+      - "svchost.exe"
+      - "RuntimeBroker.exe"
+      - "SearchHost.exe"
+      - "WindowsTerminal.exe"
+    event_log_lookback_hours: 24    # How far back to scan Windows Event Logs
+    max_connections_to_report: 20   # Cap on outbound connections listed
+
+  # ---- AI Agent / LLM ----
+  agent:
+    provider: "none"                # "gemini", "openai", "ollama", or "none" (template fallback)
+    model: "gemini-2.5-flash"       # Model name for the chosen provider
+    api_key_env: "GEMINI_API_KEY"   # Name of env var holding the API key
+    ollama_base_url: "http://localhost:11434"  # Ollama server URL if using local model
+    temperature: 0.2                # Low for factual/deterministic output
+    max_output_tokens: 1024
+    fallback_to_template: true      # If LLM call fails, use built-in template
+
+  # ---- Report Delivery ----
+  reporter:
+    console: true                   # Print report to stdout
+    save_to_file: true              # Save report as a text file
+    report_dir: "./reports"         # Directory for saved reports
+    toast_notification: false       # Windows toast notification (requires winotify)
+    webhook:
+      enabled: false
+      url: ""                       # Discord / Slack / Teams webhook URL
+    email:
+      enabled: false
+      smtp_server: ""
+      smtp_port: 587
+      use_tls: true
+      sender: ""
+      password_env: "SENTINEL_EMAIL_PASSWORD"  # Env var name
+      recipient: ""
