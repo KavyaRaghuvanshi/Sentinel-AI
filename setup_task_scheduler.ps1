@@ -17,6 +17,7 @@ param(
     [string]$PythonPath = "python.exe",
     [string]$ProjectDir = $PSScriptRoot,
     [string]$TaskName = "Sentinel_AI_Agent",
+    [switch]$WithGUI,
     [switch]$Remove
 )
 
@@ -43,9 +44,11 @@ Write-Host "Task Name:  $TaskName"
 Write-Host ""
 
 # --- Create the scheduled task ---
+$Arguments = if ($WithGUI) { "-m sentinel --gui" } else { "-m sentinel" }
+
 $Action = New-ScheduledTaskAction `
     -Execute $PythonPath `
-    -Argument "-m sentinel" `
+    -Argument $Arguments `
     -WorkingDirectory $ProjectDir
 
 $Trigger = New-ScheduledTaskTrigger -AtLogOn

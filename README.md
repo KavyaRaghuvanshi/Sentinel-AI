@@ -59,7 +59,10 @@ pip install -e ".[dev]"
 ### 2. Run
 
 ```bash
-# Basic run (template report, no API key needed)
+# Launch the Modern Desktop HUD (Graphical UI)
+python -m sentinel --gui
+
+# Basic headless CLI run (template report, no API key needed)
 python -m sentinel
 
 # Dry run (scan only, no deletions)
@@ -121,6 +124,10 @@ ollama pull llama3.2:3b
 Run the included PowerShell script as Administrator:
 
 ```powershell
+# Auto-start with Desktop GUI HUD pop-up at boot
+powershell -ExecutionPolicy Bypass -File setup_task_scheduler.ps1 -WithGUI
+
+# Or run silently in background
 powershell -ExecutionPolicy Bypass -File setup_task_scheduler.ps1
 ```
 

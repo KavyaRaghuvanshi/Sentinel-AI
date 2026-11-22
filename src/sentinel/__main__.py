@@ -81,6 +81,11 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Skip the security audit step",
     )
+    parser.add_argument(
+        "--gui",
+        action="store_true",
+        help="Launch the modern desktop graphical interface (HUD)",
+    )
     return parser.parse_args(argv)
 
 
@@ -100,6 +105,12 @@ def run(argv: list[str] | None = None) -> dict:
     """
     args = _parse_args(argv)
     _setup_logging(args.verbose)
+
+    if args.gui:
+        from sentinel.gui import launch_gui
+        config = load_config(args.config)
+        launch_gui(config)
+        return {"gui": True}
 
     logger = logging.getLogger("sentinel")
     logger.info("=" * 50)
